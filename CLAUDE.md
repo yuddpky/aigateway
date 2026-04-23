@@ -1,4 +1,52 @@
-# CLAUDE.md — Project Conventions for new-api
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Commands
+
+### Backend
+```bash
+# Build (frontend must be built first — embeds web/dist into binary)
+export PATH="/usr/local/Cellar/go/1.26.2/bin:$PATH"
+go build -o new-api .
+
+# Run dev (no frontend embed needed)
+go run main.go
+
+# Run with MySQL
+SQL_DSN="user:pass@tcp(host:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local" ./new-api --port 3000
+
+# CLI flags
+./new-api --port 3000 --log-dir ./logs --version --help
+```
+
+### Frontend (`web/` directory)
+```bash
+bun install
+bun run dev          # Vite dev server
+bun run build        # Production build (output: web/dist/)
+bun run lint         # Prettier check
+bun run lint:fix     # Prettier fix
+bun run i18n:extract # Extract translation keys
+bun run i18n:sync    # Sync translation files
+bun run i18n:lint    # Lint translation files
+```
+
+### Full build (frontend + backend)
+```bash
+make all
+```
+
+### Key environment variables
+| Variable | Purpose |
+|---|---|
+| `SQL_DSN` | MySQL/PostgreSQL DSN; defaults to SQLite if unset |
+| `LOG_SQL_DSN` | Separate DB for logs; uses `SQL_DSN` DB if unset |
+| `REDIS_CONN_STRING` | Redis URL (e.g. `redis://localhost:6379`); disabled if unset |
+| `SESSION_SECRET` | Cookie session secret |
+| `PORT` | Listening port (overrides `--port` flag) |
+
+---
 
 ## Overview
 
